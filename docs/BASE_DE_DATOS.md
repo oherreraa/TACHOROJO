@@ -1,6 +1,6 @@
-# TachoRojo · Base de datos
+# Tacho Inteligente · Base de datos
 
-Supabase (Postgres 17), proyecto **TachoRojo**, región `sa-east-1`. 43 tablas, 7 vistas, 1 vista materializada y 3 buckets privados.
+Supabase (Postgres 17), proyecto **Tacho Inteligente**, región `sa-east-1`. 43 tablas, 7 vistas, 1 vista materializada y 3 buckets privados.
 Para reconstruirla: [`supabase/README.md`](../supabase/README.md). Fuentes y nivel de verificación: [`FUENTES.md`](FUENTES.md). Lo que falta: [`PENDIENTES.md`](PENDIENTES.md).
 
 ## 1. Cómo se relacionan Basilea y las normas de cada país

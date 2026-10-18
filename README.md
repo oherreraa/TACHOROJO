@@ -1,11 +1,13 @@
-# TachoRojo
+# Tacho Inteligente
+
+_Antes llamado TachoRojo. Los identificadores técnicos (paquete Android `pe.tachorojo.app`, rutas `/tachorojo/v1`, nombre del repositorio) se mantienen para no romper nada._
 
 > Clasificador de residuos industriales por foto para Perú, Chile y México: contenedor según la norma del país, peligrosidad, código de Basilea y base legal.
 > Este archivo es también el contexto para el agente de código: léelo completo antes de cambiar nada.
 
 ## 1. Qué es
 
-TachoRojo es una app web, pensada primero para celular, que ayuda a un trabajador a disponer correctamente un residuo en el momento en que lo genera. Funciona en **Perú, Chile y México**, para residuos municipales y no municipales, y se ajusta a **10 rubros** (generación eléctrica, minería, transporte, oficinas, etc.). El rubro elegido orienta las preguntas de la IA.
+Tacho Inteligente es una app web, pensada primero para celular, que ayuda a un trabajador a disponer correctamente un residuo en el momento en que lo genera. Funciona en **Perú, Chile y México**, para residuos municipales y no municipales, y se ajusta a **10 rubros** (generación eléctrica, minería, transporte, oficinas, etc.). El rubro elegido orienta las preguntas de la IA.
 
 El trabajador toma una foto y responde una conversación corta. La IA le dice:
 
@@ -263,7 +265,7 @@ Diagramas completos y los 12 workflows en [`docs/ARQUITECTURA.md`](docs/ARQUITEC
 
 ## 12. Base de datos
 
-La base vive en Supabase (proyecto TachoRojo). Modelo y relaciones: [`docs/BASE_DE_DATOS.md`](docs/BASE_DE_DATOS.md). Fuentes: [`docs/FUENTES.md`](docs/FUENTES.md). Pendientes: [`docs/PENDIENTES.md`](docs/PENDIENTES.md). Esquema y datos reproducibles en [`supabase/`](supabase/).
+La base vive en Supabase (proyecto Tacho Inteligente). Modelo y relaciones: [`docs/BASE_DE_DATOS.md`](docs/BASE_DE_DATOS.md). Fuentes: [`docs/FUENTES.md`](docs/FUENTES.md). Pendientes: [`docs/PENDIENTES.md`](docs/PENDIENTES.md). Esquema y datos reproducibles en [`supabase/`](supabase/).
 
 ## 13. Correr el frontend
 

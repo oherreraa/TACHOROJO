@@ -1,6 +1,6 @@
 # Base de datos (Supabase)
 
-Proyecto **TachoRojo**, región `sa-east-1`. Las claves nunca van en el repo: `service_role` solo en las credenciales de n8n.
+Proyecto **Tacho Inteligente**, región `sa-east-1`. Las claves nunca van en el repo: `service_role` solo en las credenciales de n8n.
 
 ## Cómo reconstruirla
 

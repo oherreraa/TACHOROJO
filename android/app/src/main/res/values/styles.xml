@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.TachoRojo" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.TachoInteligente" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">#B71C1C</item>
         <item name="android:windowBackground">#FFFFFF</item>
     </style>

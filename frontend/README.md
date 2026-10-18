@@ -1,4 +1,4 @@
-# TachoRojo · aplicación web (PWA)
+# Tacho Inteligente · aplicación web (PWA)
 
 App para celular, sin dependencias ni paso de compilación: HTML, CSS y JavaScript con módulos.
 

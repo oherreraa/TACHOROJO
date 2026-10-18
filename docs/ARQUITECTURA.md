@@ -1,4 +1,4 @@
-# TachoRojo · Arquitectura del aplicativo
+# Tacho Inteligente · Arquitectura del aplicativo
 
 > Los diagramas están en Mermaid y GitHub los dibuja directamente. Todo el trabajo de IA, escritura en la base y reglas pasa por **n8n**; el celular nunca habla con la IA ni con claves.
 

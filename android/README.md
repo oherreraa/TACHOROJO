@@ -1,4 +1,4 @@
-# TachoRojo · Android (APK)
+# Tacho Inteligente · Android (APK)
 
 Envoltorio nativo mínimo (WebView) que empaqueta la app web de `../frontend`. Sin Capacitor ni dependencias de terceros salvo `androidx.webkit`.
 

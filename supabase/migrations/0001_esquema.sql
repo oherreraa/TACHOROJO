@@ -1,5 +1,5 @@
--- TachoRojo · esquema completo de la base de datos (estado actual en Supabase).
--- Proyecto Supabase: TachoRojo (región sa-east-1). Se aplicó en varias migraciones; aquí está consolidado.
+-- Tacho Inteligente · esquema completo de la base de datos (estado actual en Supabase).
+-- Proyecto Supabase: Tacho Inteligente (región sa-east-1). Se aplicó en varias migraciones; aquí está consolidado.
 -- Orden: referencias -> Basilea -> listados nacionales -> permisos -> operación -> ML -> estadísticas -> RLS.
 
 create extension if not exists vector with schema extensions;
