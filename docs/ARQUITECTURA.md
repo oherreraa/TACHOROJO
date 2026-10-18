@@ -108,9 +108,9 @@ Notas de reglas: un envase que contuvo una sustancia peligrosa es peligroso aunq
 
 | Método y ruta | Entrada | Respuesta |
 |---|---|---|
-| `POST /v1/session` | `device_hash`, `platform`, `app_version`, `country` | `session_id` |
-| `POST /v1/photo` | multipart: `photo`, `session_id`, `country`, `scope`, `plant_id?` | `classification_id`, `stage` (`quality_check` o `follow_up`), `quality`, `detected` |
-| `POST /v1/classify` | `classification_id`, `answer?` (texto o botón), `confirm?` | `stage` (`follow_up` o `result`), `follow_up` o `result` |
+| `POST /v1/session` | `device_hash`, `platform`, `app_version`, `country`, `scope`, `sector?` | `session_id` |
+| `POST /v1/photo` | multipart: `photo`, `session_id`, `country`, `scope`, `sector?`, `plant_id?` | `classification_id`, `stage` (`quality_check` o `follow_up`), `quality`, `detected` |
+| `POST /v1/classify` | `classification_id`, `answer?` (texto o botón), `confirm?` | `stage` (`follow_up`, `summary` o `result`), `follow_up`, `summary` o `result` |
 | `POST /v1/feedback` | `classification_id`, `helpful`, `comment?` | `ok` |
 | `POST /v1/permits` | JWT + archivo, `plant_id`, `permit_type` | `permit_id`, residuos extraídos pendientes de revisión |
 | `POST /v1/permits/{id}/review` | JWT + decisión | `status` |

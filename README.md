@@ -1,15 +1,15 @@
 # TachoRojo
 
-> Clasificador de residuos industriales por foto, según la NTP 900.058:2019 y el D.S. 014-2017-MINAM.
+> Clasificador de residuos industriales por foto para Perú, Chile y México: contenedor según la norma del país, peligrosidad, código de Basilea y base legal.
 > Este archivo es también el contexto para el agente de código: léelo completo antes de cambiar nada.
 
 ## 1. Qué es
 
-TachoRojo es una app web, pensada primero para celular, que ayuda a un trabajador de una central de generación eléctrica a disponer correctamente un residuo en el momento en que lo genera.
+TachoRojo es una app web, pensada primero para celular, que ayuda a un trabajador a disponer correctamente un residuo en el momento en que lo genera. Funciona en **Perú, Chile y México**, para residuos municipales y no municipales, y se ajusta a **10 rubros** (generación eléctrica, minería, transporte, oficinas, etc.). El rubro elegido orienta las preguntas de la IA.
 
 El trabajador toma una foto y responde una conversación corta. La IA le dice:
 
-- en qué contenedor va, según la NTP 900.058:2019;
+- en qué contenedor va, según la norma del país (NTP 900.058:2019 en Perú, NCh 3322 en Chile, convención de planta en México);
 - si el residuo es peligroso;
 - el código del Convenio de Basilea más probable;
 - qué hacer con el residuo;
@@ -109,6 +109,16 @@ Ejemplos del estilo de pregunta esperado:
 | Plomo | Vidrio |
 | Negro | No aprovechables |
 
+### Alcance multipaís (resumen)
+
+| País | Peligroso / no peligroso | Colores | Observación |
+|---|---|---|---|
+| Perú | D.S. 014-2017-MINAM (Anexos III, IV, V) | NTP 900.058:2019: 4 colores municipal, 7 no municipal | Referencia de los colores de la tabla de arriba |
+| Chile | DS 148 (Listas I, II, III; Lista A/B) | NCh 3322:2013 (rótulos de peligro) y NCh 2190 | Los colores de contenedor no son uniformes por ley |
+| México | NOM-052-SEMARNAT-2005 (CPR: C, R, E, T, I, B; Listados 1–5), NOM-087 (RPBI) | **No existe norma federal de colores industriales**; rojo es convención de planta | Los generadores registran residuos y obtienen autorización (SEMARNAT-07-017): la app prevé subir ese permiso y clasificar con él |
+
+Todo esto vive en la base de datos (ver sección 12), con indicador `verified` para lo que Jazmín aún debe validar.
+
 ### Códigos de Basilea frecuentes en generación eléctrica (semilla)
 
 > **PENDIENTE:** Jazmín debe validar esta tabla contra los Anexos III y V del D.S. 014-2017-MINAM antes de usarla en producción.
@@ -132,12 +142,17 @@ Ejemplos del estilo de pregunta esperado:
 | B3010 | Plásticos |
 | B3050 | Madera no tratada |
 
+### Basilea completo y su relación con cada país
+
+La base incluye el catálogo completo del Convenio (Anexos I, II, III, IV, VIII y IX, con las enmiendas BC-14/12 y BC-15/18), los listados nacionales (NOM-052, DS 148, D.S. 014-2017-MINAM) y las equivalencias país↔Basilea con tipo (`adopta`, `exacto`, `parcial`, `inferido`), confianza y base (texto oficial o inferencia). Las de México son por concepto y están sin verificar.
+
 ### Marco normativo
 - **D.L. 1278:** Ley de Gestión Integral de Residuos Sólidos.
 - **D.S. 014-2017-MINAM:** su reglamento. El art. 30 define los residuos peligrosos; los anexos contienen las listas.
 - **NTP 900.058:2019:** código de colores para contenedores.
 - **D.S. 002-2022-VIVIENDA:** residuos de construcción y demolición. Aplica a obras dentro de la planta. Ante dudas de peligrosidad, el generador pide opinión técnica al MINAM (art. 8.2).
-- **Obligaciones del generador no municipal:** reportar la Declaración anual y los Manifiestos de peligrosos en Sigersol. La omisión puede multarse hasta con 3 UIT por incumplimiento.
+- **Chile:** DS 148 (reglamento de residuos peligrosos), NCh 3322:2013 y NCh 2190. **México:** LGPGIR y RLGPGIR (categorías de generador: micro ≤400 kg/año, pequeño <10 t, gran ≥10 t), NOM-052, NOM-087.
+- **Obligaciones del generador no municipal (Perú):** reportar la Declaración anual y los Manifiestos de peligrosos en Sigersol. La omisión puede multarse hasta con 3 UIT por incumplimiento.
 
 ## 6. Contrato de la IA (JSON)
 
@@ -193,62 +208,67 @@ El modelo debe devolver JSON estructurado. Esquema sugerido:
 - Pensada para celular, con botones grandes. Debe funcionar con conexión lenta.
 - Sin login en esta etapa. Pie de página: "Demo · datos simulados".
 
-## 9. Arquitectura propuesta: frontend + n8n + IA gratuita
+## 9. Arquitectura: frontend + n8n + Supabase + IA gratuita
 
-Objetivo: operar con costo cero o mínimo en la etapa de prototipo.
+Diagramas completos y los 12 workflows en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 
 ```
-[Frontend web móvil]  --foto + texto (HTTPS)-->  [Webhook n8n]
-                                                     |
-                      +------------------------------+
-                      v
-        [Nodo de calidad de foto]  -> Gemini (visión, tier gratuito)
-        [Nodo de clasificación]    -> Gemini / modelo alterno, con tabla de Basilea en el prompt
-        [Validación JSON (Code)]   -> reintento 1 vez; si falla, regla precautoria
-                      |
-                      v
-        Respuesta JSON al frontend  (+ log opcional en Google Sheets / Supabase)
+[PWA móvil] --HTTPS--> [Webhooks n8n] --> [IA de visión/texto gratuita (Gemini u otra)]
+     |                       |
+     | (solo lectura)        +--> [Supabase: catálogos, sesiones, clasificaciones, permisos, ML]
+     +-----------------------+
 ```
 
-**Piezas**
-- **Frontend:** app web móvil (hoy, el export de AI Studio). Llama únicamente al webhook de n8n; no contiene claves.
-- **n8n (self-hosted o cloud):** orquesta el flujo. Un webhook por etapa o un único webhook con `stage`. La conversación (máx. 3 preguntas) se mantiene reenviando el historial en cada llamada o con un `sessionId` y memoria.
-- **IA gratuita:**
-  - Gemini API (Google AI Studio) con tier gratuito para visión y texto. Sujeto a límites de cuota; verificar condiciones vigentes.
-  - Alternativas para el mismo nodo HTTP/LLM de n8n: modelos de visión en Hugging Face Inference, OpenRouter (modelos `:free`) u Ollama local (por ejemplo, un modelo multimodal) si hay servidor propio.
-  - Un nodo de entrada intercambiable permite cambiar de proveedor sin tocar el frontend.
-- **GitHub:** repo del código y de los workflows de n8n exportados (`/n8n/*.json`, sin credenciales). GitHub Actions puede correr los tests de la sección 7 contra el webhook de pruebas. GitHub Pages sirve el frontend estático.
-- **Datos de referencia:** la tabla de Basilea y los colores viven en `/data/` (JSON) y se inyectan al prompt desde n8n. Si crece, pasar a RAG.
+- **Frontend** (`/frontend`): PWA sin dependencias. No tiene claves de IA; solo la clave pública de Supabase, que lee catálogos. Con `n8nBaseUrl` vacío corre en modo demo.
+- **n8n:** orquestador. Webhooks `/v1/session`, `/v1/photo`, `/v1/classify`, feedback y permisos. Etapas: `quality_check`, `context`, `follow_up`, `summary`, `result`. Máximo 3 preguntas, un reintento de validación JSON y luego regla precautoria.
+- **Supabase** (Postgres 17): 43 tablas, 7 vistas, 1 vista materializada, RLS, pgvector y pg_trgm. Detalle en [`docs/BASE_DE_DATOS.md`](docs/BASE_DE_DATOS.md).
+- **IA gratuita:** Gemini (tier gratuito) u alternativas (Hugging Face, OpenRouter `:free`, Ollama), intercambiables en el nodo de n8n.
+- **Publicación móvil:** como PWA se instala desde el navegador. Para Play Store: TWA con Bubblewrap. Para App Store: Capacitor, un Mac con Xcode y cuenta de desarrollador de pago.
 
-**Estructura de repo sugerida**
+**Estructura del repo**
 
 ```
 /README.md
-/frontend/        app web móvil
-/n8n/             workflows exportados (sin credenciales)
-/prompts/         prompts del sistema versionados
-/data/            basilea.json, colores_ntp.json
-/tests/           casos de la sección 7 y set de fotos
+/frontend/    PWA (ver frontend/README.md)
+/supabase/    migraciones, semillas y ajustes pendientes
+/docs/        arquitectura, base de datos, fuentes, pendientes
+/tools/       scripts de extracción de normas
+/n8n/         workflows exportados (pendiente)
 ```
 
 ## 10. Hoja de ruta
 
-1. Subir el código exportado de AI Studio a `/frontend` y ordenarlo.
-2. Crear el workflow n8n (webhook → calidad → clasificación → validación) con Gemini gratuito.
-3. Mover la llamada a Gemini del cliente al webhook; rotar la clave expuesta si hubo alguna.
-4. Validar el JSON con esquema y automatizar los tests de la sección 7.
-5. Configuración por planta: lista y colores propios.
-6. Historial de clasificaciones y exportación para el manifiesto.
-7. Canal por WhatsApp (n8n lo facilita).
-8. Selector de país (Perú / México: CRETIB y NOM-052-SEMARNAT-2005).
+| # | Tarea | Estado |
+|---|---|---|
+| 1 | Base de datos en Supabase con catálogos de Perú, Chile y México | Hecho |
+| 2 | Catálogo completo de Basilea y equivalencias por país | Hecho (México sin verificar) |
+| 3 | Rubros (10) con perfiles de residuos | Hecho (borrador, sin verificar) |
+| 4 | Diagramas y contrato de la API | Hecho |
+| 5 | Frontend PWA con modo demo | Hecho (v0.1.0) |
+| 6 | Workflows de n8n con IA gratuita | Pendiente |
+| 7 | Cargar `prompt_versions` y `ml_models` | Pendiente |
+| 8 | Validación de datos por Jazmín (`verified=false`) | Pendiente |
+| 9 | Tests automáticos de la sección 7 | Pendiente |
+| 10 | Permisos de México: subir autorización y clasificar con ella | Tablas listas; flujo pendiente |
+| 11 | Historial, exportación para manifiesto, canal WhatsApp | Pendiente |
+| 12 | Publicar en Play Store / App Store | Pendiente |
 
 ## 11. Preguntas abiertas
 
-- ¿Qué stack quedó en el código exportado de AI Studio? Revisar antes de proponer cambios grandes.
-- ¿Dónde se desplegará n8n y el frontend: servidor propio, n8n Cloud, Vercel, GitHub Pages u otro?
-- ¿Qué proveedor gratuito de visión da mejor concordancia con el criterio de Jazmín? Comparar con el set de fotos.
-- ¿La tabla de Basilea debe vivir en el prompt o en una base de datos consultada por RAG?
+- ¿Dónde se desplegarán n8n y el frontend: servidor propio, n8n Cloud, Vercel, GitHub Pages u otro?
+- ¿Qué proveedor gratuito de visión concuerda mejor con el criterio de Jazmín? Comparar con un set de fotos.
+- ¿Los perfiles por rubro y las equivalencias de México deben ser validados antes del piloto? (hoy `verified=false`)
+- ¿Se confirma que en Chile no se impone un color único de contenedor industrial?
+- Hay cinco ajustes pendientes de aplicar en la base: [`supabase/pending/ajustes_pendientes.sql`](supabase/pending/ajustes_pendientes.sql).
 
 ## 12. Base de datos
 
 La base vive en Supabase (proyecto TachoRojo). Modelo y relaciones: [`docs/BASE_DE_DATOS.md`](docs/BASE_DE_DATOS.md). Fuentes: [`docs/FUENTES.md`](docs/FUENTES.md). Pendientes: [`docs/PENDIENTES.md`](docs/PENDIENTES.md). Esquema y datos reproducibles en [`supabase/`](supabase/).
+
+## 13. Correr el frontend
+
+```bash
+cd frontend && python3 -m http.server 8080
+```
+
+Detalles en [`frontend/README.md`](frontend/README.md).
