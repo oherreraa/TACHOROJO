@@ -1,6 +1,6 @@
 # TachoRojo · Base de datos
 
-Supabase (Postgres 17), proyecto **TachoRojo**, región `sa-east-1`. 41 tablas, 6 vistas, 1 vista materializada y 3 buckets privados.
+Supabase (Postgres 17), proyecto **TachoRojo**, región `sa-east-1`. 43 tablas, 7 vistas, 1 vista materializada y 3 buckets privados.
 Para reconstruirla: [`supabase/README.md`](../supabase/README.md). Fuentes y nivel de verificación: [`FUENTES.md`](FUENTES.md). Lo que falta: [`PENDIENTES.md`](PENDIENTES.md).
 
 ## 1. Cómo se relacionan Basilea y las normas de cada país
@@ -63,7 +63,17 @@ select * from v_country_hazard_basel where h_code = 'H8';
 
 Perú y Chile publicaron sus anexos antes de estos cambios, así que **no incluyen** A1181, A3210 ni B3011. La app debe tratarlo: para un residuo electrónico, usar A1181 con aviso de que el país aún cita A1180.
 
-## 3. Mapa de tablas
+## 3. Rubros: cómo la app afina por actividad
+
+`industry_sectors` define 10 rubros: generación eléctrica, transporte y logística, minería, oficinas, construcción, manufactura, hidrocarburos, salud, agroindustria y comercio. Cada uno trae `prompt_context_es`, un texto corto que n8n agrega al prompt para que la IA espere los residuos típicos del lugar.
+
+`sector_waste_profiles` lista los residuos típicos de cada rubro (115 en total): código de Basilea principal y alternos, tipos de peligrosidad, si suele ser peligroso, frecuencia y una `question_hint_es` con la pregunta que más ayuda a desambiguar. Sirve para dos cosas: darle contexto a la IA y ordenar las opciones de las preguntas de seguimiento.
+
+`plants`, `classifications`, `test_cases` y `ml_samples` tienen `sector_id`, así que las estadísticas y la concordancia con Jazmín se pueden medir por rubro (`v_sector_classifications`).
+
+Los perfiles son un borrador de Claude (`basis = inferencia`, `verified = false`): los códigos de Basilea salen del catálogo oficial, pero la asignación a cada rubro debe validarla Jazmín.
+
+## 4. Mapa de tablas
 
 | Grupo | Tablas | Filas hoy |
 |---|---|---|
@@ -77,12 +87,13 @@ Perú y Chile publicaron sus anexos antes de estos cambios, así que **no incluy
 | Accesos | `profiles` · `api_clients` · `access_logs` | |
 | Machine learning | `ml_models` · `prompt_versions` · `ml_datasets` · `ml_samples` · `ml_predictions` · `ml_evaluations` · `image_embeddings` | |
 | RAG | `legal_documents` · `norm_chunks` | |
-| Estadísticas | `mv_daily_stats` · `v_review_agreement` · `v_top_basel` · `v_funnel` | |
+| Rubros | `industry_sectors` 10 · `sector_waste_profiles` 115 | |
+| Estadísticas | `mv_daily_stats` · `v_review_agreement` · `v_top_basel` · `v_funnel` · `v_sector_classifications` | |
 | Consulta para la app | `v_basel_by_country` · `v_listing_basel` · `v_country_hazard_basel` | |
 
 Las tablas de operación, accesos y ML están vacías a propósito: se llenan cuando la app funcione.
 
-## 4. Índices
+## 5. Índices
 
 - Toda clave foránea tiene su índice (el asesor de Supabase no marca ninguna sin índice).
 - Búsqueda de texto: índices GIN con `pg_trgm` sobre `basel_codes.description_es/en` y `country_waste_listings.description`, y búsqueda de texto completo en español sobre `basel_codes`.
@@ -91,7 +102,7 @@ Las tablas de operación, accesos y ML están vacías a propósito: se llenan cu
 - Vectores: `hnsw` con distancia coseno en `norm_chunks` e `image_embeddings`.
 - El asesor muestra avisos de "índice sin usar": es normal, la base aún no recibe consultas. No se borró ninguno.
 
-## 5. Seguridad
+## 6. Seguridad
 
 - RLS activo en todas las tablas. Los catálogos (normas, Basilea, listados, contenedores) se leen con la clave pública.
 - Operación y permisos: cada usuario ve solo su planta, según su rol (`operario`, `responsable_ambiental`, `revisor`, `admin`).

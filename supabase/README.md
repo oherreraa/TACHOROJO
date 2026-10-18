@@ -5,6 +5,7 @@ Proyecto **TachoRojo**, región `sa-east-1`. Las claves nunca van en el repo: `s
 ## Cómo reconstruirla
 
 1. `migrations/0001_esquema.sql`: tablas, índices, vistas, funciones, RLS y buckets.
+1b. `migrations/0002_rubros.sql`: rubros y perfiles de residuos por rubro.
 2. Seeds, en este orden (cada uno depende del anterior):
 
 | Archivo | Contenido |
@@ -16,6 +17,7 @@ Proyecto **TachoRojo**, región `sa-east-1`. Las claves nunca van en el repo: `s
 | `seed/004b_listado2_mexico.sql` | NOM-052: Listado 2 |
 | `seed/005_equivalencias_basilea.sql` | Perú, Chile y México contra Basilea |
 | `seed/006_peligrosidad_basilea_h.sql` | Peligrosidad de cada país contra las características H |
+| `seed/007_rubros.sql` | 10 rubros y 115 residuos típicos (requiere `0002_rubros.sql`) |
 
 3. `pending/ajustes_pendientes.sql`: cambios que no llegaron a aplicarse en la base real (ver `docs/PENDIENTES.md`).
 
