@@ -248,3 +248,7 @@ Objetivo: operar con costo cero o mínimo en la etapa de prototipo.
 - ¿Dónde se desplegará n8n y el frontend: servidor propio, n8n Cloud, Vercel, GitHub Pages u otro?
 - ¿Qué proveedor gratuito de visión da mejor concordancia con el criterio de Jazmín? Comparar con el set de fotos.
 - ¿La tabla de Basilea debe vivir en el prompt o en una base de datos consultada por RAG?
+
+## 12. Base de datos
+
+La base vive en Supabase (proyecto TachoRojo). Modelo y relaciones: [`docs/BASE_DE_DATOS.md`](docs/BASE_DE_DATOS.md). Fuentes: [`docs/FUENTES.md`](docs/FUENTES.md). Pendientes: [`docs/PENDIENTES.md`](docs/PENDIENTES.md). Esquema y datos reproducibles en [`supabase/`](supabase/).

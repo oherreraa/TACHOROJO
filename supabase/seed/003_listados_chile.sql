@@ -1,0 +1,60 @@
+-- DS 148 (Chile): Listas I, II y III (texto oficial, ed. consolidada 2021) y la entrada nacional A1129.
+-- Las Listas I y II equivalen una a una a las categorías Y del Anexo I de Basilea (II.n = Y(n+18)).
+-- Los códigos de la Lista A/B de Chile y Perú se relacionan con Basilea en 005_equivalencias.sql.
+
+insert into public.country_waste_listings (country_code, instrument_id, listing_code, listing_name, entry_key, description, group_label, basel_code, verified, notes)
+select 'CL', i.id, v.lc, v.ln, v.k, v.d, v.g, v.bc, true, v.n
+from (values
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.1','Residuos hospitalarios','Procesos','Y1',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.2','Residuos resultantes de la producción y preparación de productos farmacéuticos','Procesos','Y2',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.3','Medicamentos, drogas y productos farmacéuticos desechados','Procesos','Y3',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.4','Residuos resultantes de la producción, preparación y utilización de productos biocidas, productos fitofarmacéuticos y plaguicidas','Procesos','Y4',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.5','Residuos resultantes de la fabricación, preparación y utilización de productos químicos para la preservación de la madera','Procesos','Y5',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.6','Residuos resultantes de la producción, la preparación y la utilización de solventes orgánicos','Procesos','Y6',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.7','Residuos que contengan cianuros, resultantes del tratamiento térmico y de las operaciones de temple','Procesos','Y7',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.8','Aceites minerales residuales no aptos para el uso al que estaban destinados','Procesos','Y8',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.9','Mezclas y emulsiones residuales de aceite y agua o de hidrocarburos y agua','Procesos','Y9',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.10','Sustancias y artículos de desecho que contengan, o estén contaminados por, bifenilos policlorados (PCB), terfenilos policlorados (PCT) o bifenilos polibromados (PBB)','Procesos','Y10',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.11','Residuos alquitranados resultantes de la refinación, destilación o cualquier tratamiento pirolítico','Procesos','Y11',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.12','Residuos resultantes de la producción, preparación y utilización de tintas, colorantes, pigmentos, pinturas, lacas o barnices','Procesos','Y12',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.13','Residuos resultantes de la producción, preparación y utilización de resinas, látex, plastificantes o colas y adhesivos','Procesos','Y13',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.14','Sustancias químicas residuales, no identificadas o nuevas, resultantes de la investigación y el desarrollo o de las actividades de enseñanza y cuyos efectos en el ser humano o el medio ambiente no se conozcan','Procesos','Y14',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.15','Residuos de carácter explosivo','Procesos','Y15',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.16','Residuos resultantes de la producción, preparación y utilización de productos químicos y materiales para fines fotográficos','Procesos','Y16',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.17','Residuos resultantes del tratamiento de superficie de metales y plásticos','Procesos','Y17',null),
+ ('LISTA-I','Lista I · Categorías de residuos consistentes o resultantes de procesos','I.18','Residuos resultantes de las operaciones de eliminación de residuos','Procesos','Y18',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.1','Metales carbonilos','Constituyentes','Y19',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.2','Berilio, compuestos de berilio','Constituyentes','Y20',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.3','Compuestos de cromo hexavalente','Constituyentes','Y21',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.4','Compuestos de cobre','Constituyentes','Y22',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.5','Compuestos de zinc','Constituyentes','Y23',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.6','Arsénico, compuestos de arsénico','Constituyentes','Y24',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.7','Selenio, compuestos de selenio','Constituyentes','Y25',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.8','Cadmio, compuestos de cadmio','Constituyentes','Y26',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.9','Antimonio, compuestos de antimonio','Constituyentes','Y27',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.10','Telurio, compuestos de telurio','Constituyentes','Y28',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.11','Mercurio, compuestos de mercurio','Constituyentes','Y29',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.12','Talio, compuestos de talio','Constituyentes','Y30',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.13','Plomo, compuestos de plomo','Constituyentes','Y31',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.14','Compuestos inorgánicos de flúor, con exclusión del fluoruro cálcico','Constituyentes','Y32',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.15','Cianuros inorgánicos','Constituyentes','Y33',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.16','Soluciones ácidas o ácidos en forma sólida','Constituyentes','Y34',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.17','Soluciones básicas o bases en forma sólida','Constituyentes','Y35',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.18','Polvo y/o fibras de asbesto, con exclusión de los residuos de materiales de construcción fabricados con cemento asbesto','Constituyentes','Y36','Chile excluye los residuos de cemento asbesto; Basilea Y36 no lo excluye'),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.19','Compuestos orgánicos de fósforo','Constituyentes','Y37',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.20','Cianuros orgánicos','Constituyentes','Y38',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.21','Fenoles, compuestos fenólicos, con inclusión de clorofenoles','Constituyentes','Y39',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.22','Éteres','Constituyentes','Y40',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.23','Solventes orgánicos halogenados','Constituyentes','Y41',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.24','Solventes orgánicos, con exclusión de solventes halogenados','Constituyentes','Y42',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.25','Cualquier sustancia del grupo de los dibenzofuranos policlorados','Constituyentes','Y43',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.26','Cualquier sustancia del grupo de las dibenzoparadioxinas policloradas','Constituyentes','Y44',null),
+ ('LISTA-II','Lista II · Categorías de residuos que tengan como constituyentes','II.27','Compuestos organohalogenados, que no sean las sustancias mencionadas en el presente artículo','Constituyentes','Y45',null),
+ ('LISTA-III','Lista III · Categorías de otros residuos','III.1','Catalizadores usados','Otros residuos','A2030','Equivalencia con Basilea inferida: A2030 (catalizadores de desecho)'),
+ ('LISTA-III','Lista III · Categorías de otros residuos','III.2','Envases y recipientes contaminados que hayan contenido uno o más constituyentes enumerados en la Categoría II','Otros residuos','A4130','Equivalencia con Basilea inferida: A4130 (envases con constituyentes del Anexo I)'),
+ ('LISTA-III','Lista III · Categorías de otros residuos','III.3','Residuos que procedan de la recolección selectiva o de la segregación de residuos sólidos domiciliarios que presenten al menos una característica de peligrosidad','Otros residuos',null,null),
+ ('LISTA-III','Lista III · Categorías de otros residuos','III.4','Suelos o materiales resultantes de faenas de movimientos de tierras contaminadas por alguno de los constituyentes listados en la Categoría II','Otros residuos',null,null),
+ ('LISTA-A','Lista A · Residuos peligrosos adicionales (texto nacional)','A1129','Barros anódicos cuyo contenido de plata sea inferior a 17% y su contenido de oro sea inferior a 0,18%','Metales',null,'Entrada propia de Chile, sin código equivalente en Basilea')
+) v(lc,ln,k,d,g,bc,n)
+join public.legal_instruments i on i.code = 'DS-148-2003-MINSAL'
+on conflict (instrument_id, listing_code, entry_key) do nothing;

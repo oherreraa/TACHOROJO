@@ -140,6 +140,8 @@ Funciones transversales: selector de país y ámbito, modo sin conexión para ca
 
 ## 7. Modelo de datos (resumen)
 
+El detalle completo, con las relaciones entre Basilea y las normas de cada país, está en [`BASE_DE_DATOS.md`](BASE_DE_DATOS.md).
+
 ```mermaid
 erDiagram
   countries ||--o{ legal_instruments : tiene
